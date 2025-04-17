@@ -61,7 +61,7 @@ class MistyGUI:
         self.text_frame = tk.Frame(self.root)
         self.text_frame.pack(padx=10, pady=5)
 
-        self.textbox = tk.Entry(self.text_frame, width=100, font=("Ariel",10))
+        self.textbox = tk.Entry(self.text_frame, width=50, font=("Ariel",10))
         self.textbox.grid(row=0, column=0, padx=5, pady=0)
 
         # Add speak button
@@ -77,14 +77,46 @@ class MistyGUI:
         self.buttonframe.columnconfigure(1, weight=1)
 
         # Pre-scripted Message 1
-        self.message1a = tk.Button(self.buttonframe, wraplength=300, text="Hi I am Misty!", font=("Ariel",10), bg="yellow", command=lambda m="Hi I am Misty!": self.speech_button(m))
+        msg1_text = "Hi I am Misty!"
+        self.message1a = tk.Button(self.buttonframe, wraplength=300, text=msg1_text, font=("Ariel",10), bg="yellow", 
+                                  command=lambda m=msg1_text: self.speech_button(m))
         self.message1a.grid(row=1, column=0, sticky=tk.W+tk.E)
 
         # Pre-scripted Message 2
-        self.message2a = tk.Button(self.buttonframe, wraplength=300, text="How are you doing today?", font=("Ariel",10), bg="yellow", command=lambda m="How are you doing today?": self.speech_button(m))
+        msg2_text = "How are you doing today?"
+        self.message2a = tk.Button(self.buttonframe, wraplength=300, text=msg2_text, font=("Ariel",10), bg="yellow", 
+                                  command=lambda m=msg2_text: self.speech_button(m))
         self.message2a.grid(row=1, column=1, sticky=tk.W+tk.E)
 
-        #TODO: Add more pre-scripted message buttons or other customized buttons for speech control panel
+        # Three Good Things Introduction
+        intro_text = "Today we're going to do the Three Good Things exercise where we'll take turns sharing things we're grateful for."
+        self.intro_msg = tk.Button(self.buttonframe, wraplength=300, text=intro_text, font=("Ariel",10), bg="lightblue", 
+                                  command=lambda m=intro_text: self.speech_button(m))
+        self.intro_msg.grid(row=2, column=0, columnspan=2, sticky=tk.W+tk.E)
+        
+        # Robot Disclosure 1
+        disclosure1_text = "My first good thing is that it is a sunny day. What's your first good thing?"
+        self.disclosure1 = tk.Button(self.buttonframe, wraplength=300, text=disclosure1_text, font=("Ariel",10), bg="lightgreen", 
+                                   command=lambda m=disclosure1_text: self.speech_button(m))
+        self.disclosure1.grid(row=3, column=0, sticky=tk.W+tk.E)
+        
+        # Robot Disclosure 2
+        disclosure2_text = "My second good thing is that I get to study at UChicago. What's your second good thing?"
+        self.disclosure2 = tk.Button(self.buttonframe, wraplength=300, text=disclosure2_text, font=("Ariel",10), bg="lightgreen", 
+                                   command=lambda m=disclosure2_text: self.speech_button(m))
+        self.disclosure2.grid(row=3, column=1, sticky=tk.W+tk.E)
+        
+        # Robot Disclosure 3
+        disclosure3_text = "My third good thing is that I get to escape the confines of my locker and get to work with you guys. What's your third good thing?"
+        self.disclosure3 = tk.Button(self.buttonframe, wraplength=300, text=disclosure3_text, font=("Ariel",10), bg="lightgreen", 
+                                   command=lambda m=disclosure3_text: self.speech_button(m))
+        self.disclosure3.grid(row=4, column=0, sticky=tk.W+tk.E)
+        
+        # Conclusion
+        conclusion_text = "Thank you for sharing! I enjoyed our conversation today."
+        self.conclusion = tk.Button(self.buttonframe, wraplength=300, text=conclusion_text, font=("Ariel",10), bg="lightblue", 
+                                  command=lambda m=conclusion_text: self.speech_button(m))
+        self.conclusion.grid(row=4, column=1, sticky=tk.W+tk.E)
 
         self.buttonframe.pack(fill='x')
 
@@ -102,7 +134,18 @@ class MistyGUI:
         self.move_head_button = tk.Button(self.topbutton_frame, wraplength=300, text="Move Head 1", font=("Ariel",10), command=lambda m="move_head_1": self.action(m))
         self.move_head_button.grid(row=0, column=0, padx=5, pady=0)
 
-        #TODO: Add more customized buttons to drive misty, play audio, move arms, change led lights, change displayed image, and etc.
+        # Add nonverbal behavior buttons
+        self.nod_button = tk.Button(self.topbutton_frame, wraplength=300, text="Nod Head", font=("Ariel",10), command=lambda m="nod_head": self.action(m))
+        self.nod_button.grid(row=0, column=1, padx=5, pady=0)
+        
+        self.surprise_button = tk.Button(self.topbutton_frame, wraplength=300, text="Surprise Reaction", font=("Ariel",10), command=lambda m="surprise_reaction": self.action(m))
+        self.surprise_button.grid(row=0, column=2, padx=5, pady=0)
+        
+        self.happy_button = tk.Button(self.topbutton_frame, wraplength=300, text="Happy Reaction", font=("Ariel",10), command=lambda m="happy_reaction": self.action(m))
+        self.happy_button.grid(row=1, column=0, padx=5, pady=5)
+        
+        self.thinking_button = tk.Button(self.topbutton_frame, wraplength=300, text="Thinking Pose", font=("Ariel",10), command=lambda m="thinking_pose": self.action(m))
+        self.thinking_button.grid(row=1, column=1, padx=5, pady=5)
 
         # Add a line separator
         self.separator = ttk.Separator(self.root, orient='horizontal')
@@ -132,11 +175,41 @@ class MistyGUI:
         # refer to robot commands in RobotCommands.py - https://github.com/MistyCommunity/Python-SDK/blob/main/mistyPy/RobotCommands.py
         # or in the Misty API documentation - https://lessons.mistyrobotics.com/python-elements/misty-python-api
 
-        # TODO: edit the following action and add 3 more to handle your customized nonverbal behaviors and robot reactions (e.g., surprise)
+        # Implement actions for each button
         if phrase == "move_head_1":
             misty.move_head(-15, 0, 0, 80)
+        elif phrase == "nod_head":
+            # Nodding motion (up and down)
+            misty.move_head(0, 0, 0, 80)  
+            time.sleep(1)
+            misty.move_head(-40, 0, 0, 80)  
+            time.sleep(1)
+            misty.move_head(26, 0, 0, 80)  
+            time.sleep(1)
+            misty.move_head(-40, 0, 0, 80)  
+            time.sleep(1)
+            misty.move_head(26, 0, 0, 80)  
+            time.sleep(1)
+            misty.move_head(0, 0, 0, 80)  
+        elif phrase == "surprise_reaction":
+            # Surprise reaction (arms up, LED change, expression change)
+            misty.change_led(255, 0, 255)  
+            misty.move_arms(10, 10, 90, 90)  
+            time.sleep(0.5)
+            misty.display_image("e_Surprise.jpg")  
+        elif phrase == "happy_reaction":
+            # Happy reaction (LED green, arms wave, expression change)
+            misty.change_led(0, 255, 0) 
+            misty.display_image("e_Joy.jpg") 
+            misty.move_arms(-30, 30, 90, 90) 
+            time.sleep(0.5) 
+        elif phrase == "thinking_pose":
+            # Thinking pose (head tilt, LED blue, expression change)
+            misty.change_led(0, 0, 255)  
+            misty.move_head(0, 20, 15, 80)  
+            time.sleep(0.5)
+            misty.display_image("e_Contemplate.jpg")  
 
-            
     def speech_button(self, phrase):
         self.textbox.insert(0, phrase)
 
